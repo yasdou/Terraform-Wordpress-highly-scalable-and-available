@@ -51,3 +51,12 @@ resource "aws_subnet" "private_database_subnet_2" {
     Name = "Private database subnet 2"
   }
 }
+
+resource "aws_db_subnet_group" "DBSubnetGroup" {
+  name       = "subnetgroupdb"
+  subnet_ids = [aws_subnet.private_database_subnet_1.id, aws_subnet.private_database_subnet_2.id]
+
+  tags = {
+    Name = "WP DB subnet group"
+  }
+}
