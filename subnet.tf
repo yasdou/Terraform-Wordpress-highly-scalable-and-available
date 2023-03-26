@@ -33,3 +33,21 @@ resource "aws_subnet" "public_subnet_2" {
     Name = "public-subnet-2"
   }
 }
+
+resource "aws_subnet" "private_database_subnet_1" {
+  vpc_id     = aws_vpc.WPvpc.id
+  cidr_block = "10.0.5.0/24"
+  availability_zone = "us-west-2a"
+  tags = {
+    Name = "Private database subnet 1"
+  }
+}
+
+resource "aws_subnet" "private_database_subnet_2" {
+  vpc_id     = aws_vpc.WPvpc.id
+  cidr_block = "10.0.6.0/24"
+  availability_zone = "us-west-2b"
+  tags = {
+    Name = "Private database subnet 2"
+  }
+}
