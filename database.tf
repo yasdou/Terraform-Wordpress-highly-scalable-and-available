@@ -23,3 +23,9 @@ resource "aws_rds_cluster_instance" "WPRDSCluster" {
   engine             = aws_rds_cluster.RDSWP.engine
   engine_version     = aws_rds_cluster.RDSWP.engine_version
 }
+
+resource "aws_rds_cluster_endpoint" "RDSendpoint" {
+  cluster_identifier          = aws_rds_cluster.RDSWP.id
+  cluster_endpoint_identifier = "writer"
+  custom_endpoint_type        = "ANY"
+}
