@@ -1,8 +1,9 @@
-# Create a new security group for the bastion host
+#get IP adress of your machine
 data "http" "myip" {
   url = "http://ipv4.icanhazip.com"
 }
 
+# Create a new security group for the bastion host
 resource "aws_security_group" "bastion_sg" {
   name_prefix = "bastion-sg-"
   vpc_id      = aws_vpc.WPvpc.id
