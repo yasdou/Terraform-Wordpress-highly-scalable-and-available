@@ -1,4 +1,8 @@
 # Create a new security group for the bastion host
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
+}
+
 resource "aws_security_group" "bastion_sg" {
   name_prefix = "bastion-sg-"
   vpc_id      = aws_vpc.WPvpc.id
@@ -7,7 +11,7 @@ resource "aws_security_group" "bastion_sg" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["${chomp(data.http.myip.body)}/32"]
   }
 
   egress {
