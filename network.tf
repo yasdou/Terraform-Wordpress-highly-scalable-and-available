@@ -13,7 +13,7 @@ resource "aws_internet_gateway" "igw" {
     Name = "main"
   }
 }
-resource "aws_internet_gateway_attachment" "example" {
+resource "aws_internet_gateway_attachment" "igwattachment" {
   internet_gateway_id = aws_internet_gateway.igw.id
   vpc_id              = aws_vpc.WPvpc.id
 }
