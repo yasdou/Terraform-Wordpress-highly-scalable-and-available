@@ -27,7 +27,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu-alarm" {
   namespace = "AWS/EC2"
   period = "120"
   statistic = "Average"
-  threshold = "60"
+  threshold = "40"
   dimensions = {
   "AutoScalingGroupName" = "${aws_autoscaling_group.WPautoscaling.name}"
   }
@@ -54,7 +54,7 @@ resource "aws_cloudwatch_metric_alarm" "cpu-alarm-scaledown" {
   namespace = "AWS/EC2"
   period = "120"
   statistic = "Average"
-  threshold = "15"
+  threshold = "5"
   dimensions = {
   "AutoScalingGroupName" = "${aws_autoscaling_group.WPautoscaling.name}"
   }

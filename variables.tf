@@ -16,3 +16,12 @@ locals {
     rdsendpoint = aws_rds_cluster.RDSWP.endpoint
   }
 }
+variable "DBName"{
+    default = "WPDatabase"
+}
+variable "DBPassword"{
+    default = "12345678"
+}
+variable "DBUser"{
+    default = "root"
+}

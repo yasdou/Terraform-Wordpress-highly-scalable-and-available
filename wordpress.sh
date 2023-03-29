@@ -59,3 +59,15 @@ sudo sed -i "s/localhost/${rdsendpoint}/" /home/ec2-user/wordpress/wp-config.php
 
 sudo cp -r /home/ec2-user/wordpress/* /var/www/html/
 sudo systemctl restart httpd
+
+
+#install a stress test app to test auto scaling
+yum update -y --security
+amazon-linux-extras install epel -y
+yum -y install stress
+mkdir /var/www/html/stress
+cd /var/www/html/stress
+wget http://aws-tc-largeobjects.s3.amazonaws.com/CUR-TF-100-TULABS-1/10-lab-autoscaling-linux/s3/ec2-stress.zip
+unzip ec2-stress.zip
+
+echo 'UserData has been successfully executed. '

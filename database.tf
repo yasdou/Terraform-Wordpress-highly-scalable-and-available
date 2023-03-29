@@ -2,9 +2,9 @@ resource "aws_rds_cluster" "RDSWP" {
   cluster_identifier = "wordpresscluster"
   engine             = "aurora-mysql"
   engine_version     = "5.7.mysql_aurora.2.11.1"
-  database_name      = "WPDatabase"
-  master_username    = "root"
-  master_password    = "12345678"
+  database_name      = var.DBName
+  master_username    = var.DBUser
+  master_password    = var.DBPassword
   vpc_security_group_ids    = [aws_security_group.allow_aurora_access.id]
   db_subnet_group_name      = aws_db_subnet_group.DBSubnetGroup.id
   skip_final_snapshot       = true
@@ -18,13 +18,6 @@ resource "aws_rds_cluster" "RDSWP" {
     Name = "auroracluster-Wordpressdb"
   }
 }
-
-# resource "aws_rds_cluster_instance" "WPRDSinstance" {
-#   cluster_identifier = aws_rds_cluster.RDSWP.id
-#   instance_class     = "db.serverless"
-#   engine             = aws_rds_cluster.RDSWP.engine
-#   engine_version     = aws_rds_cluster.RDSWP.engine_version
-# }
 
 resource "aws_rds_cluster_instance" "clusterinstance" {
   count              = 2

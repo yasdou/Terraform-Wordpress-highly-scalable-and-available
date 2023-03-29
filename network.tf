@@ -10,7 +10,7 @@ resource "aws_vpc" "WPvpc" {
 
 resource "aws_internet_gateway" "igw" {
   tags = {
-    Name = "main"
+    Name = "igw"
   }
 }
 resource "aws_internet_gateway_attachment" "igwattachment" {
@@ -38,6 +38,10 @@ resource "aws_route_table_association" "public_rt_association" {
   subnet_id      = aws_subnet.public_subnet_1.id
   route_table_id = aws_route_table.public_rt.id
 }
+resource "aws_route_table_association" "public_rt_association" {
+  subnet_id      = aws_subnet.public_subnet_2.id
+  route_table_id = aws_route_table.public_rt.id
+}
 
 resource "aws_eip" "NAT_EIP" {
   vpc = true
@@ -60,7 +64,7 @@ resource "aws_nat_gateway" "privateinstanceNAT" {
 resource "aws_route_table" "private_rt" {
   vpc_id = aws_vpc.WPvpc.id
 
-  # Create a route to the internet gateway
+  # Create a route to the NAT gateway
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_nat_gateway.privateinstanceNAT.id
@@ -80,4 +84,24 @@ resource "aws_route_table_association" "nat_gateway_1" {
 resource "aws_route_table_association" "nat_gateway_2" {
   subnet_id      = aws_subnet.private_subnet_2.id
   route_table_id = aws_route_table.private_rt.id
+}
+
+# Create a route table for the database subnet
+resource "aws_route_table" "database_rt" {
+  vpc_id = aws_vpc.WPvpc.id
+
+  tags = {
+    Name = "database-rt"
+  }
+}
+
+#associate DB Subnets with DB Routing Table
+resource "aws_route_table_association" "nat_gateway_1" {
+  subnet_id      = aws_subnet.private_database_subnet_1.id
+  route_table_id = aws_route_table.database_rt.id
+}
+
+resource "aws_route_table_association" "nat_gateway_2" {
+  subnet_id      = aws_subnet.private_database_subnet_2.id
+  route_table_id = aws_route_table.database_rt.id
 }
