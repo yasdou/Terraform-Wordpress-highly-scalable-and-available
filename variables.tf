@@ -11,11 +11,6 @@ variable "ami_key_pair_name" {
 variable "region"{
     default = "us-west-2"
 }
-
-variable "iamrole"{
-    default = "arn:aws:iam::871065571772:instance-profile/LabInstanceProfile"
-}
-
 locals {
   vars = {
     rdsendpoint = aws_rds_cluster.RDSWP.endpoint

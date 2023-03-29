@@ -1,3 +1,4 @@
+#create a bastion host in a public subnet to access your Wordpress instances 
 #get IP adress of your machine
 data "http" "myip" {
   url = "http://ipv4.icanhazip.com"
@@ -21,6 +22,9 @@ resource "aws_security_group" "bastion_sg" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
+  tags = {
+    Name = "bastion-sg"
+  }
 }
 
 # Create a new instance for the bastion host
@@ -38,12 +42,5 @@ resource "aws_instance" "bastion_host" {
 
   # Associate a public IP address with the instance
   associate_public_ip_address = true
-
-  user_data = <<-EOF
-              #!/bin/bash
-              echo "Hello, World!" > /home/ubuntu/hello.txt
-              EOF
-
-  # You can add other configuration options here, such as setting up SSH keys
 }
 

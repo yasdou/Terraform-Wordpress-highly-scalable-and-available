@@ -12,11 +12,7 @@ resource "aws_launch_template" "launchtemplate" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "launchtemplate"
+      Name = "Wordpresslaunchtemplate"
     }
   }
-  depends_on = [
-    aws_rds_cluster.RDSWP,
-    aws_rds_cluster_instance.clusterinstance,
-  ]
 }
