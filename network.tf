@@ -1,10 +1,10 @@
 # Create a VPC
 resource "aws_vpc" "WPvpc" {
-    cidr_block = "10.0.0.0/16"
-    enable_dns_support = true
-    enable_dns_hostnames = true
+    cidr_block = var.VPC_CIDR
+    enable_dns_support = var.enable_dns_support
+    enable_dns_hostnames = var.enable_dns_hostnames
     tags = {
-    Name = "WPVPC"
+    Name = var.VPC_Name
     }
 }
 
@@ -34,11 +34,11 @@ resource "aws_route_table" "public_rt" {
 }
 
 # Associate the public route table with the public subnet
-resource "aws_route_table_association" "public_rt_association" {
+resource "aws_route_table_association" "public_rt_association_1" {
   subnet_id      = aws_subnet.public_subnet_1.id
   route_table_id = aws_route_table.public_rt.id
 }
-resource "aws_route_table_association" "public_rt_association" {
+resource "aws_route_table_association" "public_rt_association_2" {
   subnet_id      = aws_subnet.public_subnet_2.id
   route_table_id = aws_route_table.public_rt.id
 }
@@ -93,15 +93,4 @@ resource "aws_route_table" "database_rt" {
   tags = {
     Name = "database-rt"
   }
-}
-
-#associate DB Subnets with DB Routing Table
-resource "aws_route_table_association" "nat_gateway_1" {
-  subnet_id      = aws_subnet.private_database_subnet_1.id
-  route_table_id = aws_route_table.database_rt.id
-}
-
-resource "aws_route_table_association" "nat_gateway_2" {
-  subnet_id      = aws_subnet.private_database_subnet_2.id
-  route_table_id = aws_route_table.database_rt.id
 }

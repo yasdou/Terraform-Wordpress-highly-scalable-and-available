@@ -1,7 +1,7 @@
 resource "aws_autoscaling_group" "WPautoscaling" {
-  min_size             = 2
-  max_size             = 6
-  desired_capacity     = 2
+  min_size             = var.asg_min
+  max_size             = var.asg_max
+  desired_capacity     = var.asg_desired
   launch_template {
     id = aws_launch_template.launchtemplate.id
   }
@@ -10,15 +10,15 @@ resource "aws_autoscaling_group" "WPautoscaling" {
 }
 
 # scale up alarm
-resource "aws_autoscaling_policy" "cpu-policy" {
+resource "aws_autoscaling_policy" "cpu-policyscaleup" {
   name = "cpu-policy"
   autoscaling_group_name = aws_autoscaling_group.WPautoscaling.id
   adjustment_type = "ChangeInCapacity"
-  scaling_adjustment = "1"
-  cooldown = "300"
+  scaling_adjustment = var.up_scaling_adjustment
+  cooldown = var.up_cooldown
   policy_type = "SimpleScaling"
 }
-resource "aws_cloudwatch_metric_alarm" "cpu-alarm" {
+resource "aws_cloudwatch_metric_alarm" "cpu-alarm-scaleup" {
   alarm_name = "cpu-alarm"
   alarm_description = "cpu-alarm"
   comparison_operator = "GreaterThanOrEqualToThreshold"
@@ -27,12 +27,12 @@ resource "aws_cloudwatch_metric_alarm" "cpu-alarm" {
   namespace = "AWS/EC2"
   period = "120"
   statistic = "Average"
-  threshold = "40"
+  threshold = var.up_threshold
   dimensions = {
   "AutoScalingGroupName" = "${aws_autoscaling_group.WPautoscaling.name}"
   }
-  actions_enabled = true
-  alarm_actions = ["${aws_autoscaling_policy.cpu-policy.arn}"]
+  actions_enabled = var.actions_enabled_up
+  alarm_actions = ["${aws_autoscaling_policy.cpu-policyscaleup.arn}"]
 }
 
 # scale down alarm
@@ -40,8 +40,8 @@ resource "aws_autoscaling_policy" "cpu-policy-scaledown" {
   name = "example-cpu-policy-scaledown"
   autoscaling_group_name = "${aws_autoscaling_group.WPautoscaling.name}"
   adjustment_type = "ChangeInCapacity"
-  scaling_adjustment = "-1"
-  cooldown = "300"
+  scaling_adjustment = var.down_scaling_adjustment
+  cooldown = var.down_cooldown
   policy_type = "SimpleScaling"
 }
 
@@ -54,10 +54,10 @@ resource "aws_cloudwatch_metric_alarm" "cpu-alarm-scaledown" {
   namespace = "AWS/EC2"
   period = "120"
   statistic = "Average"
-  threshold = "5"
+  threshold = var.up_threshold
   dimensions = {
   "AutoScalingGroupName" = "${aws_autoscaling_group.WPautoscaling.name}"
   }
-  actions_enabled = true
+  actions_enabled = var.actions_enabled_up
   alarm_actions = ["${aws_autoscaling_policy.cpu-policy-scaledown.arn}"]
 }
